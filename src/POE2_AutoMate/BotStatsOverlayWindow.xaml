@@ -1,0 +1,31 @@
+<Window x:Class="POE2_AutoMate.BotStatsOverlayWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="POE2 AutoMate Bot HUD"
+        Width="292"
+        Height="184"
+        WindowStyle="None"
+        AllowsTransparency="True"
+        Background="Transparent"
+        Topmost="True"
+        ShowInTaskbar="False"
+        ResizeMode="NoResize"
+        Left="12"
+        Top="12">
+    <Border Background="#D90B0D10" BorderBrush="#88C9A45C" BorderThickness="1" CornerRadius="4" Padding="9">
+        <StackPanel>
+            <DockPanel>
+                <TextBlock Text="POE2 AutoMate" Foreground="#C9A45C" FontSize="12" FontWeight="Bold"/>
+                <TextBlock Name="HotkeyText" Text="F8" Foreground="#A7AAB2" FontSize="11" HorizontalAlignment="Right"/>
+            </DockPanel>
+            <TextBlock Name="StateText" Text="Idle" Foreground="#F4F1EA" FontSize="15" FontWeight="SemiBold" Margin="0,5,0,0"/>
+            <TextBlock Name="RunText" Text="Run -- / Map --" Foreground="#C9A45C" FontSize="11" Margin="0,3,0,0" TextTrimming="CharacterEllipsis"/>
+            <TextBlock Name="VitalsText" Text="HP -- / MP --" Foreground="#A7AAB2" FontSize="11" Margin="0,3,0,0"/>
+            <TextBlock Name="ThreatText" Text="Mobs -- / route --" Foreground="#A7AAB2" FontSize="11" Margin="0,2,0,0"/>
+            <TextBlock Name="InventoryText" Text="Inv -- / locked --" Foreground="#A7AAB2" FontSize="11" Margin="0,2,0,0"/>
+            <TextBlock Name="LootText" Text="Loot --" Foreground="#A7AAB2" FontSize="11" Margin="0,2,0,0" TextTrimming="CharacterEllipsis"/>
+            <TextBlock Name="ActionText" Text="n/a" Foreground="#F4F1EA" FontSize="11" Margin="0,4,0,0" TextTrimming="CharacterEllipsis"/>
+            <TextBlock Name="ErrorText" Text="" Foreground="#E05D5D" FontSize="11" Margin="0,2,0,0" TextTrimming="CharacterEllipsis"/>
+        </StackPanel>
+    </Border>
+</Window>

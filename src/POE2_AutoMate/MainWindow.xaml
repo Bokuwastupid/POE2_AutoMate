@@ -1,0 +1,768 @@
+<Window x:Class="POE2_AutoMate.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="POE2 AutoMate"
+        MinHeight="680"
+        MinWidth="1080"
+        Height="760"
+        Width="1180"
+        Background="{StaticResource SurfaceBrush}"
+        WindowStartupLocation="CenterScreen"
+        WindowStyle="None"
+        ResizeMode="CanResize">
+    <Border BorderBrush="#363A42" BorderThickness="1">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="44"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+
+            <Grid Grid.Row="0" Background="#111215" MouseLeftButtonDown="HeaderMouseLeftButtonDown">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="100"/>
+                    <ColumnDefinition Width="44"/>
+                    <ColumnDefinition Width="44"/>
+                </Grid.ColumnDefinitions>
+                <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="16,0,0,0">
+                    <TextBlock Text="POE2 AutoMate" Foreground="{StaticResource AccentBrush}" FontSize="16" FontWeight="Bold"/>
+                    <TextBlock Text="Dev Build" Foreground="{StaticResource MutedTextBrush}" Margin="12,2,0,0"/>
+                </StackPanel>
+                <Button Grid.Column="1" Content="STOP" ToolTip="Stop map runner and combat bot" Background="#4A1C22" Foreground="#F2A6B4" BorderBrush="#7A2D3A" Margin="8,7,6,7" Click="StopBotClick"/>
+                <Button Grid.Column="2" Content="_" ToolTip="Minimize" Background="Transparent" Foreground="{StaticResource MutedTextBrush}" BorderThickness="0" Click="MinimizeClick"/>
+                <Button Grid.Column="3" Content="X" ToolTip="Close" Background="Transparent" Foreground="{StaticResource MutedTextBrush}" BorderThickness="0" Click="CloseClick"/>
+            </Grid>
+
+            <Grid Grid.Row="1">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="220"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+
+                <Border Grid.Column="0" Background="{StaticResource PanelBrush}">
+                    <DockPanel>
+                        <StackPanel DockPanel.Dock="Top" Margin="0,18,0,0">
+                            <Button Content="Dashboard" Style="{StaticResource NavButton}" Click="ShowDashboard"/>
+                            <Button Content="AutoStart" Style="{StaticResource NavButton}" Click="ShowAutoStart"/>
+                            <Button Content="Inventory" Style="{StaticResource NavButton}" Click="ShowInventory"/>
+                            <Button Content="Combat" Style="{StaticResource NavButton}" Click="ShowCombat"/>
+                            <Button Content="Loot" Style="{StaticResource NavButton}" Click="ShowLoot"/>
+                            <Button Content="Atlas" Style="{StaticResource NavButton}" Click="ShowAtlas"/>
+                            <Button Content="Debug" Style="{StaticResource NavButton}" Click="ShowDebug"/>
+                            <Button Content="Radar" Style="{StaticResource NavButton}" Click="ShowMapPreview"/>
+                            <Button Content="Dev / Memory" Style="{StaticResource NavButton}" Click="ShowDev"/>
+                        </StackPanel>
+
+                        <Border DockPanel.Dock="Bottom" Background="#1C1E22" Padding="16" Margin="12">
+                            <StackPanel>
+                                <TextBlock Text="Process" Style="{StaticResource MutedText}"/>
+                                <TextBlock Name="SidebarProcessText" Text="PathOfExileSteam" FontWeight="SemiBold" Margin="0,4,0,0"/>
+                                <TextBlock Name="SidebarStatusText" Text="Disconnected" Foreground="{StaticResource DangerBrush}" Margin="0,8,0,0"/>
+                            </StackPanel>
+                        </Border>
+                    </DockPanel>
+                </Border>
+
+                <Grid Grid.Column="1" Background="{StaticResource SurfaceBrush}">
+                    <Grid Name="DashboardView">
+                        <Grid Margin="28">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="*"/>
+                            </Grid.RowDefinitions>
+
+                            <StackPanel>
+                                <TextBlock Text="System Status" Style="{StaticResource TitleText}"/>
+                                <TextBlock Text="Local control panel for monitoring process state and assistant modules." Style="{StaticResource MutedText}" Margin="0,6,0,0"/>
+                            </StackPanel>
+
+                            <UniformGrid Grid.Row="1" Columns="3" Margin="0,22,0,22">
+                                <Border Background="{StaticResource PanelBrush}" BorderBrush="#343842" BorderThickness="1" Padding="18" Margin="0,0,12,0">
+                                    <StackPanel>
+                                        <TextBlock Text="Game" Style="{StaticResource MutedText}"/>
+                                        <TextBlock Name="StatusGame" Text="Not Detected" Foreground="{StaticResource DangerBrush}" FontSize="18" FontWeight="SemiBold" Margin="0,8,0,0"/>
+                                    </StackPanel>
+                                </Border>
+                                <Border Background="{StaticResource PanelBrush}" BorderBrush="#343842" BorderThickness="1" Padding="18" Margin="6,0,6,0">
+                                    <StackPanel>
+                                        <TextBlock Text="Memory" Style="{StaticResource MutedText}"/>
+                                        <TextBlock Name="StatusMemory" Text="Disconnected" Foreground="{StaticResource DangerBrush}" FontSize="18" FontWeight="SemiBold" Margin="0,8,0,0"/>
+                                    </StackPanel>
+                                </Border>
+                                <Border Background="{StaticResource PanelBrush}" BorderBrush="#343842" BorderThickness="1" Padding="18" Margin="12,0,0,0">
+                                    <StackPanel>
+                                        <TextBlock Text="Assistant" Style="{StaticResource MutedText}"/>
+                                        <TextBlock Name="StatusBot" Text="Inactive" Foreground="{StaticResource MutedTextBrush}" FontSize="18" FontWeight="SemiBold" Margin="0,8,0,0"/>
+                                    </StackPanel>
+                                </Border>
+                            </UniformGrid>
+
+                            <Grid Grid.Row="2">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="*"/>
+                                </Grid.RowDefinitions>
+                                <TextBlock Text="Logs" FontSize="16" FontWeight="SemiBold"/>
+                                <TextBox Grid.Row="1" Name="LogBox" Style="{StaticResource DarkTextBox}" Background="#08090B" Foreground="#89D185" IsReadOnly="True" AcceptsReturn="True" TextWrapping="Wrap" VerticalScrollBarVisibility="Auto" Margin="0,10,0,0"/>
+                            </Grid>
+                        </Grid>
+                    </Grid>
+
+                    <Grid Name="DevView" Visibility="Collapsed">
+                        <Grid Margin="28">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="*"/>
+                            </Grid.RowDefinitions>
+
+                            <StackPanel>
+                                <TextBlock Text="Dev Tools &amp; Memory Reader" Style="{StaticResource TitleText}"/>
+                                <TextBlock Text="Attach to a local process and inspect reader status." Style="{StaticResource MutedText}" Margin="0,6,0,0"/>
+                            </StackPanel>
+
+                            <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="0,22,0,16">
+                                <TextBox Name="ProcessNameBox" Style="{StaticResource DarkTextBox}" Width="220" Text="PathOfExileSteam" Margin="0,0,10,0"/>
+                                <Button Content="Attach" Style="{StaticResource DarkButton}" Click="AttachProcessClick" Margin="0,0,10,0"/>
+                                <Button Content="Scan Patterns" Style="{StaticResource DarkButton}" Click="ScanPatternsClick" Margin="0,0,10,0"/>
+                                <Button Content="Detach" Style="{StaticResource DarkButton}" Click="DetachProcessClick"/>
+                            </StackPanel>
+
+                            <Border Grid.Row="2" Background="{StaticResource PanelBrush}" BorderBrush="#343842" BorderThickness="1" Padding="14" Margin="0,0,0,16">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="Auto"/>
+                                    </Grid.RowDefinitions>
+
+                                    <TextBlock Text="Live Data" FontWeight="SemiBold" Margin="0,0,0,10"/>
+                                    <TextBlock Grid.Column="1" Name="LiveResolveText" Text="Resolve: idle" Style="{StaticResource MutedText}" HorizontalAlignment="Right"/>
+                                    <TextBlock Grid.Row="1" Name="LiveLocalPlayerText" Text="LocalPlayer: n/a" Style="{StaticResource MutedText}" Margin="0,0,16,6"/>
+                                    <TextBlock Grid.Row="1" Grid.Column="1" Name="LivePositionText" Text="Position: n/a" Style="{StaticResource MutedText}" Margin="0,0,0,6"/>
+                                    <TextBlock Grid.Row="2" Name="LiveHealthText" Text="Health: n/a" Style="{StaticResource MutedText}" Margin="0,0,16,0"/>
+                                    <TextBlock Grid.Row="2" Grid.Column="1" Name="LiveManaText" Text="Mana: n/a" Style="{StaticResource MutedText}"/>
+                                </Grid>
+                            </Border>
+
+                            <TextBox Grid.Row="3" Name="MemoryLogBox" Style="{StaticResource DarkTextBox}" Background="#08090B" Foreground="#E05D5D" IsReadOnly="True" AcceptsReturn="True" TextWrapping="Wrap" VerticalScrollBarVisibility="Auto"/>
+                        </Grid>
+                    </Grid>
+
+                    <Grid Name="MapPreviewView" Visibility="Collapsed">
+                        <Grid Margin="28">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
+
+                            <StackPanel>
+                                <TextBlock Text="Map Preview" Style="{StaticResource TitleText}"/>
+                                <TextBlock Name="MapPreviewStatusText" Text="Run Scan Patterns in Dev / Memory to start the read-only snapshot loop." Style="{StaticResource MutedText}" Margin="0,6,0,0"/>
+                                <WrapPanel Margin="0,14,0,0" VerticalAlignment="Center">
+                                    <Button Name="OverlayToggleButton" Content="Open Overlay" Style="{StaticResource DarkButton}" Click="ToggleOverlayClick" Width="130" Margin="0,0,10,8"/>
+                                    <Button Content="Apply Overlay" Style="{StaticResource DarkButton}" Click="ApplyOverlaySettingsClick" Width="130" Margin="0,0,14,8"/>
+                                    <CheckBox Name="OverlayRotate180Box" Content="Rotate 180" VerticalAlignment="Center" Margin="0,0,14,8"/>
+                                    <CheckBox Name="OverlayFollowGameBox" Content="Follow game" VerticalAlignment="Center" Margin="0,0,14,8"/>
+                                    <CheckBox Name="OverlayFullMapBox" Content="Full map" VerticalAlignment="Center" Margin="0,0,14,8"/>
+                                    <TextBlock Text="W" VerticalAlignment="Center" Style="{StaticResource MutedText}" Margin="0,0,4,8"/>
+                                    <TextBox Name="OverlayWidthBox" Style="{StaticResource DarkTextBox}" Width="58" Margin="0,0,8,8"/>
+                                    <TextBlock Text="H" VerticalAlignment="Center" Style="{StaticResource MutedText}" Margin="0,0,4,8"/>
+                                    <TextBox Name="OverlayHeightBox" Style="{StaticResource DarkTextBox}" Width="58" Margin="0,0,8,8"/>
+                                    <TextBlock Text="Scale" VerticalAlignment="Center" Style="{StaticResource MutedText}" Margin="0,0,4,8"/>
+                                    <TextBox Name="OverlayScaleBox" Style="{StaticResource DarkTextBox}" Width="58" Margin="0,0,8,8"/>
+                                    <TextBlock Text="Opacity" VerticalAlignment="Center" Style="{StaticResource MutedText}" Margin="0,0,4,8"/>
+                                    <TextBox Name="OverlayOpacityBox" Style="{StaticResource DarkTextBox}" Width="58" Margin="0,0,0,8"/>
+                                </WrapPanel>
+                                <WrapPanel Margin="0,2,0,0">
+                                    <CheckBox Name="OverlayShowTerrainBox" Content="Terrain" Margin="0,0,14,8"/>
+                                    <CheckBox Name="OverlayShowMonstersBox" Content="Monsters" Margin="0,0,14,8"/>
+                                    <CheckBox Name="OverlayShowChestsBox" Content="Chests" Margin="0,0,14,8"/>
+                                    <CheckBox Name="OverlayShowTransitionsBox" Content="Transitions" Margin="0,0,14,8"/>
+                                    <CheckBox Name="OverlayShowNpcsBox" Content="NPC" Margin="0,0,14,8"/>
+                                    <CheckBox Name="OverlayShowOtherBox" Content="Other/Object" Margin="0,0,0,8"/>
+                                </WrapPanel>
+                            </StackPanel>
+
+                            <Border Grid.Row="1" Background="#08090B" BorderBrush="#343842" BorderThickness="1" Margin="0,22,0,14">
+                                <Canvas Name="MapCanvas" ClipToBounds="True" MinHeight="380"/>
+                            </Border>
+
+                            <UniformGrid Grid.Row="2" Columns="4">
+                                <TextBlock Name="MapEntityCountText" Text="Entities: 0" Style="{StaticResource MutedText}"/>
+                                <TextBlock Name="MapMonsterCountText" Text="Monsters: 0" Style="{StaticResource MutedText}"/>
+                                <TextBlock Name="MapChestCountText" Text="Chests: 0" Style="{StaticResource MutedText}"/>
+                                <TextBlock Name="MapScaleText" Text="Scale: 1px = 10 world" Style="{StaticResource MutedText}"/>
+                            </UniformGrid>
+                        </Grid>
+                    </Grid>
+
+                    <Grid Name="AutoStartView" Visibility="Collapsed">
+                        <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+                            <StackPanel Margin="28" Width="680" HorizontalAlignment="Left">
+                                <TextBlock Text="AutoStart" Style="{StaticResource TitleText}"/>
+                                <TextBlock Text="Full map loop orchestrator. It detects whether you are already in a map or in hideout and starts from the correct stage." Style="{StaticResource MutedText}" Margin="0,6,0,22"/>
+
+                                <Border Background="{StaticResource PanelBrush}" BorderBrush="#343842" BorderThickness="1" Padding="16" Margin="0,0,0,16">
+                                    <StackPanel>
+                                        <TextBlock Text="Loop Control" FontWeight="SemiBold" Margin="0,0,0,12"/>
+                                        <WrapPanel>
+                                            <CheckBox Name="EnableAutoMapper" Content="Enable AutoStart state machine" Checked="EnableAutoMapperChanged" Unchecked="EnableAutoMapperChanged" Margin="0,0,18,8"/>
+                                            <CheckBox Name="AutoMapperDryRunBox" Content="Dry-run only" Visibility="Collapsed" IsChecked="False"/>
+                                            <CheckBox Name="AutoMapperActiveInputBox" Content="Allow active input" Checked="RuntimeSettingsChanged" Unchecked="RuntimeSettingsChanged" Margin="0,0,0,8"/>
+                                            <CheckBox Name="RequireBossKillBox" Content="Require boss kill before leaving map" Checked="RuntimeSettingsChanged" Unchecked="RuntimeSettingsChanged" Margin="0,0,18,8"/>
+                                        </WrapPanel>
+                                        <UniformGrid Columns="5" Margin="0,8,0,0">
+                                            <StackPanel Margin="0,0,10,0">
+                                                <TextBlock Text="Preset" Style="{StaticResource MutedText}"/>
+                                                <ComboBox Name="MappingPresetBox" SelectionChanged="RuntimeSettingsChanged">
+                                                    <ComboBoxItem Content="Full Map Clear" Tag="FullMapClear"/>
+                                                    <ComboBoxItem Content="Boss Rush Clear" Tag="BossRush"/>
+                                                </ComboBox>
+                                            </StackPanel>
+                                            <StackPanel Margin="0,0,10,0">
+                                                <TextBlock Text="Runs target" Style="{StaticResource MutedText}"/>
+                                                <TextBox Name="AutoMapperRunsTargetBox" Style="{StaticResource DarkTextBox}" Text="1" TextChanged="RuntimeTextChanged"/>
+                                            </StackPanel>
+                                            <StackPanel Margin="0,0,10,0">
+                                                <TextBlock Text="Return key" Style="{StaticResource MutedText}"/>
+                                                <TextBox Name="ReturnToHideoutKeyBox" Style="{StaticResource DarkTextBox}" Text="F5" PreviewKeyDown="BindTextBoxPreviewKeyDown" TextChanged="RuntimeTextChanged"/>
+                                            </StackPanel>
+                                            <StackPanel Margin="0,0,10,0">
+                                                <TextBlock Text="Inventory key" Style="{StaticResource MutedText}"/>
+                                                <TextBox Name="OpenInventoryKeyBox" Style="{StaticResource DarkTextBox}" Text="I" PreviewKeyDown="BindTextBoxPreviewKeyDown" TextChanged="RuntimeTextChanged"/>
+                                            </StackPanel>
+                                            <StackPanel>
+                                                <TextBlock Text="Portal key" Style="{StaticResource MutedText}"/>
+                                                <TextBox Name="PortalKeyBox" Style="{StaticResource DarkTextBox}" Text="T" PreviewKeyDown="BindTextBoxPreviewKeyDown" TextChanged="RuntimeTextChanged"/>
+                                            </StackPanel>
+                                        </UniformGrid>
+                                    </StackPanel>
+                                </Border>
+
+                                <Border Background="{StaticResource PanelBrush}" BorderBrush="#343842" BorderThickness="1" Padding="16" Margin="0,0,0,16">
+                                    <StackPanel>
+                                        <TextBlock Text="Supplies" FontWeight="SemiBold" Margin="0,0,0,12"/>
+                                        <UniformGrid Columns="4">
+                                            <StackPanel Margin="0,0,10,0">
+                                                <TextBlock Text="Waystone tab" Style="{StaticResource MutedText}"/>
+                                                <TextBox Name="WaystoneTabBox" Style="{StaticResource DarkTextBox}" Text="maps" TextChanged="RuntimeTextChanged"/>
+                                            </StackPanel>
+                                            <StackPanel Margin="0,0,10,0">
+                                                <TextBlock Text="Waystones" Style="{StaticResource MutedText}"/>
+                                                <TextBox Name="WaystoneTakeCountBox" Style="{StaticResource DarkTextBox}" Text="1" TextChanged="RuntimeTextChanged"/>
+                                            </StackPanel>
+                                            <StackPanel Margin="0,0,10,0">
+                                                <TextBlock Text="Max waystone tier" Style="{StaticResource MutedText}"/>
+                                                <TextBox Name="MaxWaystoneTierBox" Style="{StaticResource DarkTextBox}" Text="16" TextChanged="RuntimeTextChanged"/>
+                                            </StackPanel>
+                                            <StackPanel Margin="0,0,10,0">
+                                                <TextBlock Text="Tablet tab" Style="{StaticResource MutedText}"/>
+                                                <TextBox Name="TabletTabBox" Style="{StaticResource DarkTextBox}" Text="maps" TextChanged="RuntimeTextChanged"/>
+                                            </StackPanel>
+                                            <StackPanel>
+                                                <TextBlock Text="Tablets per map" Style="{StaticResource MutedText}"/>
+                                                <TextBox Name="TabletTakeCountBox" Style="{StaticResource DarkTextBox}" Text="0" TextChanged="RuntimeTextChanged"/>
+                                            </StackPanel>
+                                        </UniformGrid>
+                                        <WrapPanel Margin="0,14,0,0">
+                                            <CheckBox Name="AlchemyWaystonesBox" Content="Use Orb of Alchemy on normal waystones" Checked="RuntimeSettingsChanged" Unchecked="RuntimeSettingsChanged" Margin="0,0,18,8"/>
+                                            <CheckBox Name="AllowUnknownWaystoneTierBox" Content="Allow unknown tier waystones" Checked="RuntimeSettingsChanged" Unchecked="RuntimeSettingsChanged" Margin="0,0,0,8"/>
+                                        </WrapPanel>
+                                        <UniformGrid Columns="2" Margin="0,4,0,0">
+                                            <StackPanel Margin="0,0,10,0">
+                                                <TextBlock Text="Currency tab" Style="{StaticResource MutedText}"/>
+                                                <TextBox Name="CurrencyTabBox" Style="{StaticResource DarkTextBox}" Text="валюта" TextChanged="RuntimeTextChanged"/>
+                                            </StackPanel>
+                                            <StackPanel>
+                                                <TextBlock Text="Alchemy orbs to take" Style="{StaticResource MutedText}"/>
+                                                <TextBox Name="AlchemyTakeCountBox" Style="{StaticResource DarkTextBox}" Text="1" TextChanged="RuntimeTextChanged"/>
+                                            </StackPanel>
+                                        </UniformGrid>
+                                        <TextBlock Text="Tablet slots" FontWeight="SemiBold" Margin="0,16,0,8"/>
+                                        <UniformGrid Columns="3">
+                                            <ComboBox Name="TabletSlot1Box" Margin="0,0,10,0" SelectionChanged="RuntimeSettingsChanged"/>
+                                            <ComboBox Name="TabletSlot2Box" Margin="0,0,10,0" SelectionChanged="RuntimeSettingsChanged"/>
+                                            <ComboBox Name="TabletSlot3Box" SelectionChanged="RuntimeSettingsChanged"/>
+                                        </UniformGrid>
+                                    </StackPanel>
+                                </Border>
+
+                                <Border Background="{StaticResource PanelBrush}" BorderBrush="#343842" BorderThickness="1" Padding="16" Margin="0,0,0,16">
+                                    <StackPanel>
+                                        <TextBlock Text="Live State" FontWeight="SemiBold" Margin="0,0,0,12"/>
+                                        <TextBlock Name="AutoMapperStatusText" Text="State: idle" Style="{StaticResource MutedText}" Margin="0,0,0,6"/>
+                                        <TextBlock Name="AutoMapperMapText" Text="Map: n/a" Style="{StaticResource MutedText}" Margin="0,0,0,6"/>
+                                        <TextBlock Name="AutoMapperInventoryText" Text="Inventory: n/a" Style="{StaticResource MutedText}" Margin="0,0,0,6"/>
+                                        <TextBlock Name="AutoMapperActionText" Text="Action: n/a" Style="{StaticResource MutedText}" Margin="0,0,0,6"/>
+                                        <TextBlock Name="AutoMapperErrorText" Text="Error: none" Foreground="{StaticResource DangerBrush}" TextWrapping="Wrap"/>
+                                    </StackPanel>
+                                </Border>
+
+                                <Button Content="Save AutoStart Config" Style="{StaticResource DarkButton}" Click="SaveAutoMapperConfigClick" Width="190" HorizontalAlignment="Left"/>
+                            </StackPanel>
+                        </ScrollViewer>
+                    </Grid>
+
+                    <Grid Name="InventoryView" Visibility="Collapsed">
+                        <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+                            <StackPanel Margin="28" Width="720" HorizontalAlignment="Left">
+                                <TextBlock Text="Inventory" Style="{StaticResource TitleText}"/>
+                                <TextBlock Text="Protected cells are never dumped. Any multi-cell item touching a protected cell is locked." Style="{StaticResource MutedText}" Margin="0,6,0,22"/>
+                                <DockPanel Margin="0,0,0,8">
+                                    <TextBlock Name="ProtectedCellsText" Text="Protected cells: 0/60" FontWeight="SemiBold" VerticalAlignment="Center"/>
+                                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                                        <Button Content="Select all" Style="{StaticResource DarkButton}" Click="SelectAllInventoryCellsClick" Padding="10,5" MinHeight="28" Margin="0,0,8,0"/>
+                                        <Button Content="Deselect all" Style="{StaticResource DarkButton}" Click="DeselectAllInventoryCellsClick" Padding="10,5" MinHeight="28"/>
+                                    </StackPanel>
+                                </DockPanel>
+                                <UniformGrid Name="InventorySafeGrid" Columns="12" Rows="5" Margin="0,0,0,18"/>
+                                <TextBlock Name="InventorySummaryText" Text="Inventory: scanner waiting" Style="{StaticResource MutedText}" Margin="0,0,0,10"/>
+                                <TextBox Name="InventoryItemsText" Style="{StaticResource DarkTextBox}" Height="210" IsReadOnly="True" AcceptsReturn="True" VerticalScrollBarVisibility="Auto" TextWrapping="NoWrap"/>
+
+                                <Expander Header="Screen grid calibration" Foreground="{StaticResource TextBrush}" Margin="0,18,0,12">
+                                    <UniformGrid Columns="4" Margin="0,12,0,0">
+                                        <StackPanel Margin="0,0,10,0">
+                                            <TextBlock Text="Left" Style="{StaticResource MutedText}"/>
+                                            <TextBox Name="InventoryGridLeftBox" Style="{StaticResource DarkTextBox}" Text="0.03" TextChanged="RuntimeTextChanged"/>
+                                        </StackPanel>
+                                        <StackPanel Margin="0,0,10,0">
+                                            <TextBlock Text="Top" Style="{StaticResource MutedText}"/>
+                                            <TextBox Name="InventoryGridTopBox" Style="{StaticResource DarkTextBox}" Text="0.655" TextChanged="RuntimeTextChanged"/>
+                                        </StackPanel>
+                                        <StackPanel Margin="0,0,10,0">
+                                            <TextBlock Text="Width" Style="{StaticResource MutedText}"/>
+                                            <TextBox Name="InventoryGridWidthBox" Style="{StaticResource DarkTextBox}" Text="0.945" TextChanged="RuntimeTextChanged"/>
+                                        </StackPanel>
+                                        <StackPanel>
+                                            <TextBlock Text="Height" Style="{StaticResource MutedText}"/>
+                                            <TextBox Name="InventoryGridHeightBox" Style="{StaticResource DarkTextBox}" Text="0.288" TextChanged="RuntimeTextChanged"/>
+                                        </StackPanel>
+                                    </UniformGrid>
+                                </Expander>
+                                <StackPanel Orientation="Horizontal">
+                                    <Button Content="Save Inventory Config" Style="{StaticResource DarkButton}" Click="SaveInventoryConfigClick" Width="190" HorizontalAlignment="Left"/>
+                                    <Button Content="Calibrate grid from memory" Style="{StaticResource DarkButton}" Click="CalibrateInventoryGridClick" Width="220" Margin="10,0,0,0" ToolTip="Open the inventory in-game, then click to detect the backpack grid rectangle from memory and update the calibration."/>
+                                    <Button Content="Test waystone hover" Style="{StaticResource DarkButton}" Click="TestWaystoneHoverClick" Width="170" Margin="10,0,0,0" ToolTip="Open the inventory in-game with a waystone in it, then click: moves the cursor to the waystone and Ctrl+C's it to verify calibration + copy."/>
+                                </StackPanel>
+                                <TextBlock Name="InventoryCalibrationText" Text="Grid calibration: open inventory in-game, then Calibrate." Style="{StaticResource MutedText}" Margin="0,8,0,0" TextWrapping="Wrap"/>
+                            </StackPanel>
+                        </ScrollViewer>
+                    </Grid>
+
+                    <Grid Name="MapRunnerView" Visibility="Collapsed">
+                        <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+                        <StackPanel Margin="28" Width="520" HorizontalAlignment="Left">
+                            <TextBlock Text="Auto Map Configuration" Style="{StaticResource TitleText}"/>
+                            <TextBlock Text="Map runner can monitor the current area and send configured interact input when active mode is enabled." Style="{StaticResource MutedText}" Margin="0,6,0,22"/>
+                            <CheckBox Name="EnableMapRunner" Content="Enable map runner monitor" Checked="EnableMapRunnerChanged" Unchecked="EnableMapRunnerChanged"/>
+                            <CheckBox Name="MapRunnerActiveInputBox" Content="Active input: press interact key near chests/transitions" Margin="0,10,0,0" Checked="RuntimeSettingsChanged" Unchecked="RuntimeSettingsChanged"/>
+                            <TextBlock Text="Interact key" Margin="0,14,0,0"/>
+                            <TextBox Name="MapRunnerInteractKeyBox" Style="{StaticResource DarkTextBox}" Text="F" Margin="0,6,0,10" PreviewKeyDown="BindTextBoxPreviewKeyDown" PreviewMouseDown="BindTextBoxPreviewMouseDown" TextChanged="RuntimeTextChanged"/>
+                            <TextBlock Text="Interact range"/>
+                            <TextBox Name="MapRunnerInteractRangeBox" Style="{StaticResource DarkTextBox}" Text="260" Margin="0,6,0,10" TextChanged="RuntimeTextChanged"/>
+                            <TextBlock Text="Interact cooldown ms"/>
+                            <TextBox Name="MapRunnerInteractCooldownBox" Style="{StaticResource DarkTextBox}" Text="1200" Margin="0,6,0,14" TextChanged="RuntimeTextChanged"/>
+                            <Button Content="Save Map Runner Config" Style="{StaticResource DarkButton}" Click="SaveMapRunnerConfigClick" Width="190" HorizontalAlignment="Left"/>
+                            <TextBlock Name="MapRunnerStateText" Text="State: idle" Style="{StaticResource MutedText}" Margin="0,18,0,0"/>
+                            <TextBlock Name="MapRunnerCountsText" Text="Counts: n/a" Style="{StaticResource MutedText}" Margin="0,6,0,0"/>
+                            <TextBlock Name="MapRunnerObjectiveText" Text="Objective: n/a" Style="{StaticResource MutedText}" Margin="0,6,0,0" TextWrapping="Wrap"/>
+                            <TextBlock Name="MapRunnerActionText" Text="Action: n/a" Style="{StaticResource MutedText}" Margin="0,6,0,0" TextWrapping="Wrap"/>
+                        </StackPanel>
+                        </ScrollViewer>
+                    </Grid>
+
+                    <Grid Name="CombatView" Visibility="Collapsed" Margin="28">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+
+                        <DockPanel Margin="0,0,0,18">
+                            <StackPanel DockPanel.Dock="Left">
+                                <TextBlock Text="Combat" Style="{StaticResource TitleText}"/>
+                                <TextBlock Text="Operational controls for movement, skills, loot and survival." Style="{StaticResource MutedText}" Margin="0,6,0,0"/>
+                            </StackPanel>
+                            <Button DockPanel.Dock="Right" Content="Save Combat Config" Style="{StaticResource DarkButton}" Click="SaveCombatConfigClick" Width="170" HorizontalAlignment="Right"/>
+                        </DockPanel>
+
+                        <TabControl Grid.Row="1">
+                            <TabItem Header="Core">
+                                <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+                                    <StackPanel Width="760" HorizontalAlignment="Left" Margin="0,18,0,0">
+                                        <Border Background="{StaticResource PanelBrush}" BorderBrush="#343842" BorderThickness="1" Padding="16" Margin="0,0,0,16">
+                                            <UniformGrid Columns="2">
+                                                <StackPanel Margin="0,0,14,0">
+                                                    <TextBlock Text="AutoStart loop hotkey" Style="{StaticResource MutedText}"/>
+                                                    <TextBox Name="BotToggleHotkeyBox" Style="{StaticResource DarkTextBox}" Text="F8" Margin="0,6,0,12" PreviewKeyDown="BindTextBoxPreviewKeyDown" TextChanged="RuntimeTextChanged"/>
+                                                    <CheckBox Name="EnableCombat" Content="Enable combat monitor" Checked="EnableCombatChanged" Unchecked="EnableCombatChanged"/>
+                                                    <CheckBox Name="CombatActiveInputBox" Content="Allow active input" Checked="RuntimeSettingsChanged" Unchecked="RuntimeSettingsChanged"/>
+                                                    <CheckBox Name="CombatAutoMoveBox" Content="Auto move" Checked="RuntimeSettingsChanged" Unchecked="RuntimeSettingsChanged"/>
+                                                    <CheckBox Name="CombatAutoAttackBox" Content="Auto attack" Checked="RuntimeSettingsChanged" Unchecked="RuntimeSettingsChanged"/>
+                                                </StackPanel>
+                                                <StackPanel>
+                                                    <TextBlock Text="Movement mode" Style="{StaticResource MutedText}"/>
+                                                    <ComboBox Name="CombatMovementModeBox" Margin="0,6,0,12" SelectionChanged="RuntimeSettingsChanged">
+                                                        <ComboBoxItem Content="MouseClick"/>
+                                                        <ComboBoxItem Content="WASD"/>
+                                                    </ComboBox>
+                                                    <CheckBox Name="CombatTargetEncountersBox" Content="Target encounters" Checked="RuntimeSettingsChanged" Unchecked="RuntimeSettingsChanged"/>
+                                                    <CheckBox Name="CombatPressAllAbilitiesBox" Content="Press all abilities" Checked="RuntimeSettingsChanged" Unchecked="RuntimeSettingsChanged"/>
+                                                    <CheckBox Name="CombatAutoLootBox" Content="Auto loot" Checked="RuntimeSettingsChanged" Unchecked="RuntimeSettingsChanged"/>
+                                                    <CheckBox Name="CombatExploreWhenNoTargetBox" Content="Explore when no target" Checked="RuntimeSettingsChanged" Unchecked="RuntimeSettingsChanged"/>
+                                                    <CheckBox Name="CombatDebugOverlayBox" Content="Debug overlay" Checked="RuntimeSettingsChanged" Unchecked="RuntimeSettingsChanged"/>
+                                                </StackPanel>
+                                            </UniformGrid>
+                                        </Border>
+                                        <Border Background="{StaticResource PanelBrush}" BorderBrush="#343842" BorderThickness="1" Padding="16">
+                                            <UniformGrid Columns="3">
+                                                <CheckBox Name="CombatProjectMovementBox" Content="Projected movement" Checked="RuntimeSettingsChanged" Unchecked="RuntimeSettingsChanged"/>
+                                                <CheckBox Name="CombatInvertInputXBox" Content="Invert input X" Checked="RuntimeSettingsChanged" Unchecked="RuntimeSettingsChanged"/>
+                                                <CheckBox Name="CombatInvertInputYBox" Content="Invert input Y" Checked="RuntimeSettingsChanged" Unchecked="RuntimeSettingsChanged"/>
+                                            </UniformGrid>
+                                        </Border>
+                                    </StackPanel>
+                                </ScrollViewer>
+                            </TabItem>
+
+                            <TabItem Header="Skills">
+                                <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+                                    <StackPanel Width="760" HorizontalAlignment="Left" Margin="0,18,0,0">
+                                        <UniformGrid Columns="2">
+                                            <StackPanel Margin="0,0,14,12">
+                                                <TextBlock Text="Attack skill key" Style="{StaticResource MutedText}"/>
+                                                <TextBox Name="AttackSkillKeyBox" Style="{StaticResource DarkTextBox}" Text="1" Margin="0,6,0,12" PreviewKeyDown="BindTextBoxPreviewKeyDown" PreviewMouseDown="BindTextBoxPreviewMouseDown" TextChanged="RuntimeTextChanged"/>
+                                            </StackPanel>
+                                            <StackPanel Margin="0,0,0,12">
+                                                <TextBlock Text="Ability keys" Style="{StaticResource MutedText}"/>
+                                                <TextBox Name="CombatAbilityKeysBox" Style="{StaticResource DarkTextBox}" Text="1" Margin="0,6,0,12" Tag="List" PreviewKeyDown="BindListTextBoxPreviewKeyDown" PreviewMouseDown="BindTextBoxPreviewMouseDown" TextChanged="RuntimeTextChanged"/>
+                                            </StackPanel>
+                                            <StackPanel Margin="0,0,14,12">
+                                                <TextBlock Text="Rare combo keys" Style="{StaticResource MutedText}"/>
+                                                <TextBox Name="CombatRareComboKeysBox" Style="{StaticResource DarkTextBox}" Text="" Margin="0,6,0,12" Tag="List" PreviewKeyDown="BindListTextBoxPreviewKeyDown" PreviewMouseDown="BindTextBoxPreviewMouseDown" TextChanged="RuntimeTextChanged"/>
+                                            </StackPanel>
+                                            <StackPanel Margin="0,0,0,12">
+                                                <TextBlock Text="Unique/Boss combo keys" Style="{StaticResource MutedText}"/>
+                                                <TextBox Name="CombatUniqueComboKeysBox" Style="{StaticResource DarkTextBox}" Text="" Margin="0,6,0,12" Tag="List" PreviewKeyDown="BindListTextBoxPreviewKeyDown" PreviewMouseDown="BindTextBoxPreviewMouseDown" TextChanged="RuntimeTextChanged"/>
+                                            </StackPanel>
+                                            <StackPanel Margin="0,0,14,12">
+                                                <TextBlock Text="Health flask keys" Style="{StaticResource MutedText}"/>
+                                                <TextBox Name="HealthFlaskKeysBox" Style="{StaticResource DarkTextBox}" Text="1" Margin="0,6,0,12" Tag="List" PreviewKeyDown="BindListTextBoxPreviewKeyDown" PreviewMouseDown="BindTextBoxPreviewMouseDown" TextChanged="RuntimeTextChanged"/>
+                                            </StackPanel>
+                                            <StackPanel Margin="0,0,0,12">
+                                                <TextBlock Text="Mana flask keys" Style="{StaticResource MutedText}"/>
+                                                <TextBox Name="ManaFlaskKeysBox" Style="{StaticResource DarkTextBox}" Text="2" Margin="0,6,0,12" Tag="List" PreviewKeyDown="BindListTextBoxPreviewKeyDown" PreviewMouseDown="BindTextBoxPreviewMouseDown" TextChanged="RuntimeTextChanged"/>
+                                            </StackPanel>
+                                        </UniformGrid>
+                                        <CheckBox Name="CombatUniqueComboRepeatBox" Content="Repeat boss/unique combo after recast cooldown" Checked="RuntimeSettingsChanged" Unchecked="RuntimeSettingsChanged"/>
+                                        <WrapPanel Margin="0,4,0,10">
+                                            <Button Content="Scan skill binds" Style="{StaticResource DarkButton}" Click="ScanSkillLoadoutClick" Padding="10,5" MinHeight="28" Margin="0,0,8,0"/>
+                                            <Button Content="Use scanned skill keys" Style="{StaticResource DarkButton}" Click="ApplyScannedSkillKeysClick" Padding="10,5" MinHeight="28"/>
+                                        </WrapPanel>
+                                        <TextBox Name="SkillLoadoutPreviewBox" Style="{StaticResource DarkTextBox}" Height="96" IsReadOnly="True" AcceptsReturn="True" TextWrapping="Wrap" VerticalScrollBarVisibility="Auto"/>
+                                    </StackPanel>
+                                </ScrollViewer>
+                            </TabItem>
+
+                            <TabItem Header="Movement">
+                                <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+                                    <StackPanel Width="760" HorizontalAlignment="Left" Margin="0,18,0,0">
+                                        <TextBlock Text="WASD keys" FontWeight="SemiBold" Margin="0,0,0,8"/>
+                                        <UniformGrid Columns="4" Margin="0,0,0,16">
+                                            <TextBox Name="CombatMoveUpKeyBox" Style="{StaticResource DarkTextBox}" Text="W" Margin="0,0,8,0" PreviewKeyDown="BindTextBoxPreviewKeyDown" TextChanged="RuntimeTextChanged"/>
+                                            <TextBox Name="CombatMoveLeftKeyBox" Style="{StaticResource DarkTextBox}" Text="A" Margin="0,0,8,0" PreviewKeyDown="BindTextBoxPreviewKeyDown" TextChanged="RuntimeTextChanged"/>
+                                            <TextBox Name="CombatMoveDownKeyBox" Style="{StaticResource DarkTextBox}" Text="S" Margin="0,0,8,0" PreviewKeyDown="BindTextBoxPreviewKeyDown" TextChanged="RuntimeTextChanged"/>
+                                            <TextBox Name="CombatMoveRightKeyBox" Style="{StaticResource DarkTextBox}" Text="D" PreviewKeyDown="BindTextBoxPreviewKeyDown" TextChanged="RuntimeTextChanged"/>
+                                        </UniformGrid>
+                                        <UniformGrid Columns="2">
+                                            <StackPanel Margin="0,0,14,12">
+                                                <TextBlock Text="Move click pixels" Style="{StaticResource MutedText}"/>
+                                                <TextBox Name="CombatMoveClickPixelsBox" Style="{StaticResource DarkTextBox}" Text="230" Margin="0,6,0,0" TextChanged="RuntimeTextChanged"/>
+                                            </StackPanel>
+                                            <StackPanel Margin="0,0,0,12">
+                                                <TextBlock Text="WASD hold ms" Style="{StaticResource MutedText}"/>
+                                                <TextBox Name="CombatWasdHoldMsBox" Style="{StaticResource DarkTextBox}" Text="260" Margin="0,6,0,0" TextChanged="RuntimeTextChanged"/>
+                                            </StackPanel>
+                                            <StackPanel Margin="0,0,14,12">
+                                                <TextBlock Text="Explore step world units" Style="{StaticResource MutedText}"/>
+                                                <TextBox Name="CombatExploreStepBox" Style="{StaticResource DarkTextBox}" Text="900" Margin="0,6,0,0" TextChanged="RuntimeTextChanged"/>
+                                            </StackPanel>
+                                            <StackPanel Margin="0,0,0,12">
+                                                <TextBlock Text="Explore direction ms" Style="{StaticResource MutedText}"/>
+                                                <TextBox Name="CombatExploreDirectionMsBox" Style="{StaticResource DarkTextBox}" Text="2500" Margin="0,6,0,0" TextChanged="RuntimeTextChanged"/>
+                                            </StackPanel>
+                                        </UniformGrid>
+                                    </StackPanel>
+                                </ScrollViewer>
+                            </TabItem>
+
+                            <TabItem Header="Loot">
+                                <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+                                    <StackPanel Width="760" HorizontalAlignment="Left" Margin="0,18,0,0">
+                                        <UniformGrid Columns="2">
+                                            <StackPanel Margin="0,0,14,12">
+                                                <TextBlock Text="Loot key" Style="{StaticResource MutedText}"/>
+                                                <TextBox Name="CombatLootKeyBox" Style="{StaticResource DarkTextBox}" Text="F" Margin="0,6,0,0" PreviewKeyDown="BindTextBoxPreviewKeyDown" PreviewMouseDown="BindTextBoxPreviewMouseDown" TextChanged="RuntimeTextChanged"/>
+                                            </StackPanel>
+                                            <StackPanel Margin="0,0,0,12">
+                                                <TextBlock Text="Encounter interact key" Style="{StaticResource MutedText}"/>
+                                                <TextBox Name="CombatEncounterInteractKeyBox" Style="{StaticResource DarkTextBox}" Text="F" Margin="0,6,0,0" PreviewKeyDown="BindTextBoxPreviewKeyDown" PreviewMouseDown="BindTextBoxPreviewMouseDown" TextChanged="RuntimeTextChanged"/>
+                                            </StackPanel>
+                                            <StackPanel Margin="0,0,14,12">
+                                                <TextBlock Text="Loot range" Style="{StaticResource MutedText}"/>
+                                                <TextBox Name="CombatLootRangeBox" Style="{StaticResource DarkTextBox}" Text="260" Margin="0,6,0,0" TextChanged="RuntimeTextChanged"/>
+                                            </StackPanel>
+                                            <StackPanel Margin="0,0,0,12">
+                                                <TextBlock Text="Loot cooldown ms" Style="{StaticResource MutedText}"/>
+                                                <TextBox Name="CombatLootCooldownBox" Style="{StaticResource DarkTextBox}" Text="220" Margin="0,6,0,0" TextChanged="RuntimeTextChanged"/>
+                                            </StackPanel>
+                                            <StackPanel Margin="0,0,14,12">
+                                                <TextBlock Text="No loot if monster within" Style="{StaticResource MutedText}"/>
+                                                <TextBox Name="CombatLootSafeMonsterRadiusBox" Style="{StaticResource DarkTextBox}" Text="850" Margin="0,6,0,0" TextChanged="RuntimeTextChanged"/>
+                                            </StackPanel>
+                                            <StackPanel Margin="0,0,0,12">
+                                                <TextBlock Text="Loot failed attempts before ignore" Style="{StaticResource MutedText}"/>
+                                                <TextBox Name="CombatLootMaxAttemptsBox" Style="{StaticResource DarkTextBox}" Text="3" Margin="0,6,0,0" TextChanged="RuntimeTextChanged"/>
+                                            </StackPanel>
+                                            <StackPanel Margin="0,0,14,12">
+                                                <TextBlock Text="Label X offset px" Style="{StaticResource MutedText}"/>
+                                                <TextBox Name="CombatLootLabelXOffsetBox" Style="{StaticResource DarkTextBox}" Text="0" Margin="0,6,0,0" TextChanged="RuntimeTextChanged"/>
+                                            </StackPanel>
+                                            <StackPanel Margin="0,0,0,12">
+                                                <TextBlock Text="Label Y offset px" Style="{StaticResource MutedText}"/>
+                                                <TextBox Name="CombatLootLabelOffsetBox" Style="{StaticResource DarkTextBox}" Text="-54" Margin="0,6,0,0" TextChanged="RuntimeTextChanged"/>
+                                            </StackPanel>
+                                            <StackPanel Margin="0,0,14,12">
+                                                <TextBlock Text="Label search px" Style="{StaticResource MutedText}"/>
+                                                <TextBox Name="CombatLootLabelSearchBox" Style="{StaticResource DarkTextBox}" Text="34" Margin="0,6,0,0" TextChanged="RuntimeTextChanged"/>
+                                            </StackPanel>
+                                        </UniformGrid>
+                                        <Separator Margin="0,6,0,14"/>
+                                        <UniformGrid Columns="3">
+                                            <StackPanel Margin="0,0,14,12">
+                                                <TextBlock Text="Encounter range" Style="{StaticResource MutedText}"/>
+                                                <TextBox Name="CombatEncounterRangeBox" Style="{StaticResource DarkTextBox}" Text="260" Margin="0,6,0,0" TextChanged="RuntimeTextChanged"/>
+                                            </StackPanel>
+                                            <StackPanel Margin="0,0,14,12">
+                                                <TextBlock Text="Encounter enter range" Style="{StaticResource MutedText}"/>
+                                                <TextBox Name="CombatEncounterEnterRangeBox" Style="{StaticResource DarkTextBox}" Text="45" Margin="0,6,0,0" TextChanged="RuntimeTextChanged"/>
+                                            </StackPanel>
+                                            <StackPanel Margin="0,0,0,12">
+                                                <TextBlock Text="Essence click count" Style="{StaticResource MutedText}"/>
+                                                <TextBox Name="CombatEssenceClickCountBox" Style="{StaticResource DarkTextBox}" Text="4" Margin="0,6,0,0" TextChanged="RuntimeTextChanged"/>
+                                            </StackPanel>
+                                        </UniformGrid>
+                                    </StackPanel>
+                                </ScrollViewer>
+                            </TabItem>
+
+                            <TabItem Header="Survival">
+                                <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+                                    <StackPanel Width="760" HorizontalAlignment="Left" Margin="0,18,0,0">
+                                        <CheckBox Name="CombatKitingBox" Content="Kite with dodge when effective Life+ES+Ward is low" Checked="RuntimeSettingsChanged" Unchecked="RuntimeSettingsChanged"/>
+                                        <UniformGrid Columns="2">
+                                            <StackPanel Margin="0,0,14,12">
+                                                <TextBlock Text="Minimum health percent" Style="{StaticResource MutedText}"/>
+                                                <TextBox Name="MinHealthBox" Style="{StaticResource DarkTextBox}" Text="50" Margin="0,6,0,0" TextChanged="RuntimeTextChanged"/>
+                                            </StackPanel>
+                                            <StackPanel Margin="0,0,0,12">
+                                                <TextBlock Text="Minimum mana percent" Style="{StaticResource MutedText}"/>
+                                                <TextBox Name="MinManaBox" Style="{StaticResource DarkTextBox}" Text="35" Margin="0,6,0,0" TextChanged="RuntimeTextChanged"/>
+                                            </StackPanel>
+                                            <StackPanel Margin="0,0,14,12">
+                                                <TextBlock Text="Kite effective pool percent" Style="{StaticResource MutedText}"/>
+                                                <TextBox Name="CombatKiteThresholdBox" Style="{StaticResource DarkTextBox}" Text="55" Margin="0,6,0,0" TextChanged="RuntimeTextChanged"/>
+                                            </StackPanel>
+                                            <StackPanel Margin="0,0,0,12">
+                                                <TextBlock Text="Kite cooldown ms" Style="{StaticResource MutedText}"/>
+                                                <TextBox Name="CombatKiteCooldownBox" Style="{StaticResource DarkTextBox}" Text="1400" Margin="0,6,0,0" TextChanged="RuntimeTextChanged"/>
+                                            </StackPanel>
+                                            <StackPanel Margin="0,0,14,12">
+                                                <TextBlock Text="Dodge key" Style="{StaticResource MutedText}"/>
+                                                <TextBox Name="CombatDodgeKeyBox" Style="{StaticResource DarkTextBox}" Text="SPACE" Margin="0,6,0,0" PreviewKeyDown="BindTextBoxPreviewKeyDown" TextChanged="RuntimeTextChanged"/>
+                                            </StackPanel>
+                                            <StackPanel Margin="0,0,0,12">
+                                                <TextBlock Text="Flask cooldown ms" Style="{StaticResource MutedText}"/>
+                                                <TextBox Name="CombatFlaskCooldownBox" Style="{StaticResource DarkTextBox}" Text="3200" Margin="0,6,0,0" TextChanged="RuntimeTextChanged"/>
+                                            </StackPanel>
+                                        </UniformGrid>
+                                    </StackPanel>
+                                </ScrollViewer>
+                            </TabItem>
+
+                            <TabItem Header="Advanced">
+                                <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+                                    <StackPanel Width="760" HorizontalAlignment="Left" Margin="0,18,0,0">
+                                        <UniformGrid Columns="2">
+                                            <StackPanel Margin="0,0,14,12">
+                                                <TextBlock Text="Combat range" Style="{StaticResource MutedText}"/>
+                                                <TextBox Name="CombatRangeBox" Style="{StaticResource DarkTextBox}" Text="550" Margin="0,6,0,0" TextChanged="RuntimeTextChanged"/>
+                                            </StackPanel>
+                                            <StackPanel Margin="0,0,0,12">
+                                                <TextBlock Text="Cast range" Style="{StaticResource MutedText}"/>
+                                                <TextBox Name="CombatCastRangeBox" Style="{StaticResource DarkTextBox}" Text="420" Margin="0,6,0,0" TextChanged="RuntimeTextChanged"/>
+                                            </StackPanel>
+                                            <StackPanel Margin="0,0,14,12">
+                                                <TextBlock Text="Finish map when monsters &lt;= X" Style="{StaticResource MutedText}"/>
+                                                <TextBox Name="CombatFinishMonsterCountBox" Style="{StaticResource DarkTextBox}" Text="10" Margin="0,6,0,0" TextChanged="RuntimeTextChanged"/>
+                                            </StackPanel>
+                                            <StackPanel Margin="0,0,0,12">
+                                                <TextBlock Text="Nearby monster radius" Style="{StaticResource MutedText}"/>
+                                                <TextBox Name="CombatNearbyRadiusBox" Style="{StaticResource DarkTextBox}" Text="650" Margin="0,6,0,0" TextChanged="RuntimeTextChanged"/>
+                                            </StackPanel>
+                                            <StackPanel Margin="0,0,14,12">
+                                                <TextBlock Text="Danger monster count" Style="{StaticResource MutedText}"/>
+                                                <TextBox Name="CombatDangerCountBox" Style="{StaticResource DarkTextBox}" Text="6" Margin="0,6,0,0" TextChanged="RuntimeTextChanged"/>
+                                            </StackPanel>
+                                            <StackPanel Margin="0,0,0,12">
+                                                <TextBlock Text="Ability cooldown ms" Style="{StaticResource MutedText}"/>
+                                                <TextBox Name="CombatAbilityCooldownBox" Style="{StaticResource DarkTextBox}" Text="100" Margin="0,6,0,0" TextChanged="RuntimeTextChanged"/>
+                                            </StackPanel>
+                                            <StackPanel Margin="0,0,14,12">
+                                                <TextBlock Text="Ability sequence delay ms" Style="{StaticResource MutedText}"/>
+                                                <TextBox Name="CombatAbilityDelayBox" Style="{StaticResource DarkTextBox}" Text="65" Margin="0,6,0,0" TextChanged="RuntimeTextChanged"/>
+                                            </StackPanel>
+                                            <StackPanel Margin="0,0,0,12">
+                                                <TextBlock Text="Rare combo cooldown ms" Style="{StaticResource MutedText}"/>
+                                                <TextBox Name="CombatComboCooldownBox" Style="{StaticResource DarkTextBox}" Text="1200" Margin="0,6,0,0" TextChanged="RuntimeTextChanged"/>
+                                            </StackPanel>
+                                            <StackPanel Margin="0,0,14,12">
+                                                <TextBlock Text="Boss/Unique combo recast ms" Style="{StaticResource MutedText}"/>
+                                                <TextBox Name="CombatUniqueComboRecastBox" Style="{StaticResource DarkTextBox}" Text="4000" Margin="0,6,0,0" TextChanged="RuntimeTextChanged"/>
+                                            </StackPanel>
+                                            <StackPanel Margin="0,0,0,12">
+                                                <TextBlock Text="Target click cooldown ms" Style="{StaticResource MutedText}"/>
+                                                <TextBox Name="CombatTargetClickCooldownBox" Style="{StaticResource DarkTextBox}" Text="180" Margin="0,6,0,0" TextChanged="RuntimeTextChanged"/>
+                                            </StackPanel>
+                                        </UniformGrid>
+                                    </StackPanel>
+                                </ScrollViewer>
+                            </TabItem>
+                        </TabControl>
+
+                        <Border Grid.Row="2" Background="{StaticResource PanelBrush}" BorderBrush="#343842" BorderThickness="1" Padding="14" Margin="0,18,0,0">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="1.1*"/>
+                                    <ColumnDefinition Width="1.1*"/>
+                                    <ColumnDefinition Width="1.6*"/>
+                                </Grid.ColumnDefinitions>
+                                <StackPanel Grid.Column="0">
+                                    <TextBlock Name="CombatStateText" Text="State: idle" Style="{StaticResource MutedText}"/>
+                                    <TextBlock Name="CombatVitalsText" Text="Vitals: n/a" Style="{StaticResource MutedText}" Margin="0,6,0,0"/>
+                                </StackPanel>
+                                <TextBlock Grid.Column="1" Name="CombatThreatText" Text="Threat: n/a" Style="{StaticResource MutedText}" Margin="14,0,14,0"/>
+                                <TextBlock Grid.Column="2" Name="CombatActionText" Text="Action: n/a" Style="{StaticResource MutedText}" TextWrapping="Wrap"/>
+                            </Grid>
+                        </Border>
+                    </Grid>
+
+                    <Grid Name="LootView" Visibility="Collapsed">
+                        <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+                            <StackPanel Margin="28" Width="620" HorizontalAlignment="Left">
+                                <TextBlock Text="Loot" Style="{StaticResource TitleText}"/>
+                                <TextBlock Text="Looting is blocked while combat monsters are inside the configured safe radius." Style="{StaticResource MutedText}" Margin="0,6,0,22"/>
+                                <CheckBox Content="Auto loot" IsChecked="{Binding ElementName=CombatAutoLootBox, Path=IsChecked, Mode=TwoWay}" Checked="RuntimeSettingsChanged" Unchecked="RuntimeSettingsChanged"/>
+                                <WrapPanel Margin="0,10,0,14">
+                                    <CheckBox Name="LootCurrencyBox" Content="Currency" Checked="RuntimeSettingsChanged" Unchecked="RuntimeSettingsChanged" Margin="0,0,18,8"/>
+                                    <CheckBox Name="LootGearBox" Content="Gear/items" Checked="RuntimeSettingsChanged" Unchecked="RuntimeSettingsChanged" Margin="0,0,18,8"/>
+                                    <CheckBox Name="LootOtherBox" Content="Other drops" Checked="RuntimeSettingsChanged" Unchecked="RuntimeSettingsChanged" Margin="0,0,0,8"/>
+                                </WrapPanel>
+                                <UniformGrid Columns="2">
+                                    <StackPanel Margin="0,0,12,12">
+                                        <TextBlock Text="Loot key" Style="{StaticResource MutedText}"/>
+                                        <TextBox Text="{Binding ElementName=CombatLootKeyBox, Path=Text, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource DarkTextBox}" PreviewKeyDown="BindTextBoxPreviewKeyDown" PreviewMouseDown="BindTextBoxPreviewMouseDown"/>
+                                    </StackPanel>
+                                    <StackPanel Margin="0,0,0,12">
+                                        <TextBlock Text="Loot range" Style="{StaticResource MutedText}"/>
+                                        <TextBox Text="{Binding ElementName=CombatLootRangeBox, Path=Text, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource DarkTextBox}"/>
+                                    </StackPanel>
+                                    <StackPanel Margin="0,0,12,12">
+                                        <TextBlock Text="Loot cooldown ms" Style="{StaticResource MutedText}"/>
+                                        <TextBox Text="{Binding ElementName=CombatLootCooldownBox, Path=Text, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource DarkTextBox}"/>
+                                    </StackPanel>
+                                    <StackPanel Margin="0,0,0,12">
+                                        <TextBlock Text="No loot if monster within" Style="{StaticResource MutedText}"/>
+                                        <TextBox Text="{Binding ElementName=CombatLootSafeMonsterRadiusBox, Path=Text, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource DarkTextBox}"/>
+                                    </StackPanel>
+                                    <StackPanel Margin="0,0,12,12">
+                                        <TextBlock Text="Label X offset" Style="{StaticResource MutedText}"/>
+                                        <TextBox Text="{Binding ElementName=CombatLootLabelXOffsetBox, Path=Text, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource DarkTextBox}"/>
+                                    </StackPanel>
+                                    <StackPanel Margin="0,0,0,12">
+                                        <TextBlock Text="Label Y offset" Style="{StaticResource MutedText}"/>
+                                        <TextBox Text="{Binding ElementName=CombatLootLabelOffsetBox, Path=Text, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource DarkTextBox}"/>
+                                    </StackPanel>
+                                </UniformGrid>
+                                <TextBlock Name="LootStatusText" Text="Loot status is shown in Combat action and HUD." Style="{StaticResource MutedText}" Margin="0,8,0,0"/>
+                                <Border Background="{StaticResource PanelBrush}" BorderBrush="#343842" BorderThickness="1" Padding="16" Margin="0,18,0,0">
+                                    <StackPanel>
+                                        <TextBlock Text="Loot Statistics" FontWeight="SemiBold" Margin="0,0,0,8"/>
+                                        <TextBlock Name="LootValueText" Text="Divine value: 0" Style="{StaticResource MutedText}" Margin="0,0,0,8"/>
+                                        <TextBox Name="LootStatsTextBox" Style="{StaticResource DarkTextBox}" Height="180" IsReadOnly="True" AcceptsReturn="True" VerticalScrollBarVisibility="Auto" TextWrapping="NoWrap"/>
+                                    </StackPanel>
+                                </Border>
+                            </StackPanel>
+                        </ScrollViewer>
+                    </Grid>
+
+                    <Grid Name="AtlasView" Visibility="Collapsed">
+                        <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+                            <StackPanel Margin="28" Width="680" HorizontalAlignment="Left">
+                                <TextBlock Text="Atlas" Style="{StaticResource TitleText}"/>
+                                <TextBlock Text="AutoStart selects the nearest decoded atlas candidate and skips names in the blacklist." Style="{StaticResource MutedText}" Margin="0,6,0,22"/>
+                                <CheckBox Name="AvoidDecoratedAtlasNodesBox" Content="Avoid atlas nodes with extra icon / implicit mechanic" Checked="RuntimeSettingsChanged" Unchecked="RuntimeSettingsChanged"/>
+                                <StackPanel Width="210" HorizontalAlignment="Left" Margin="0,0,0,14">
+                                    <TextBlock Text="Icon detection radius px" Style="{StaticResource MutedText}"/>
+                                    <TextBox Name="AtlasDecorationRadiusBox" Style="{StaticResource DarkTextBox}" Text="82" TextChanged="RuntimeTextChanged"/>
+                                </StackPanel>
+                                <TextBlock Text="Map blacklist" FontWeight="SemiBold" Margin="0,0,0,8"/>
+                                <TextBox Name="AtlasBlacklistBox" Style="{StaticResource DarkTextBox}" Height="120" AcceptsReturn="True" TextWrapping="Wrap" VerticalScrollBarVisibility="Auto" TextChanged="RuntimeTextChanged"/>
+                                <TextBlock Name="AtlasCandidateText" Text="Atlas/UI: scanner waiting" Style="{StaticResource MutedText}" Margin="0,16,0,0"/>
+                                <TextBlock Name="LastAtlasNodeText" Text="Nearest map search uses the last selected decoded node." Style="{StaticResource MutedText}" Margin="0,6,0,0"/>
+                                <StackPanel Orientation="Horizontal" Margin="0,16,0,0">
+                                    <Button Content="Save Atlas Config" Style="{StaticResource DarkButton}" Click="SaveAutoMapperConfigClick" Width="170" HorizontalAlignment="Left"/>
+                                    <Button Content="Dump atlas nodes" Style="{StaticResource DarkButton}" Click="DumpAtlasNodesClick" Width="170" Margin="10,0,0,0" ToolTip="Open the atlas in-game, then click to read the live map nodes from memory and log them."/>
+                                </StackPanel>
+                                <TextBlock Name="AtlasNodesDumpText" Text="Atlas nodes: open the atlas in-game, then Dump." Style="{StaticResource MutedText}" Margin="0,8,0,0" TextWrapping="Wrap"/>
+                            </StackPanel>
+                        </ScrollViewer>
+                    </Grid>
+
+                    <Grid Name="DebugView" Visibility="Collapsed">
+                        <Grid Margin="28">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="*"/>
+                            </Grid.RowDefinitions>
+                            <StackPanel>
+                                <TextBlock Text="Debug" Style="{StaticResource TitleText}"/>
+                                <TextBlock Text="Live memory/UI diagnostics for AutoStart, atlas and inventory calibration." Style="{StaticResource MutedText}" Margin="0,6,0,16"/>
+                            </StackPanel>
+                            <TextBox Grid.Row="1" Name="DebugUiTextBox" Style="{StaticResource DarkTextBox}" Background="#08090B" Foreground="#D8C28A" IsReadOnly="True" AcceptsReturn="True" TextWrapping="NoWrap" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto"/>
+                        </Grid>
+                    </Grid>
+
+                    <Grid Name="SettingsView" Visibility="Collapsed">
+                        <StackPanel Margin="28" Width="520" HorizontalAlignment="Left">
+                            <TextBlock Text="Settings" Style="{StaticResource TitleText}"/>
+                            <TextBlock Text="Configuration file is created on first launch." Style="{StaticResource MutedText}" Margin="0,6,0,22"/>
+                            <TextBlock Text="Settings path"/>
+                            <TextBox Name="SettingsPathBox" Style="{StaticResource DarkTextBox}" IsReadOnly="True" Margin="0,6,0,18"/>
+                            <Button Content="Reload Settings" Style="{StaticResource DarkButton}" Click="ReloadSettingsClick" Width="150" HorizontalAlignment="Left"/>
+                        </StackPanel>
+                    </Grid>
+                </Grid>
+            </Grid>
+        </Grid>
+    </Border>
+</Window>
